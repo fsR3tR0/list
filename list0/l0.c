@@ -20,12 +20,14 @@ typedef struct lista_komplex{
 lista *beszur_elore(lista *l, u8 data);
 lista_komplex *beszur_komplex_elore(lista_komplex *l_k, float data_1, float data_2, float d, float ab);
 lista_komplex *fk_beolvas(FILE *fp, lista_komplex *head);
+lista *beszur_hatra(lista* l, u8 data);
 void kiir(lista *l);
 void kiir_komplex(lista_komplex *l_k);
 void lista_free(lista *l);
 void lista_k_free(lista_komplex *lk);
 void hossz_sima(lista *l, u16 *lenght);
 void hossz_komplex(lista_komplex *lk);
+void keres_sima(lista* l0, u8 data_s);
 
 int main(int argc, uch *argv[])
 {
@@ -35,6 +37,7 @@ int main(int argc, uch *argv[])
 	float in_Re = -1.0, in_Im = -1.0;
 	float dgr = 0.0, absv = 0.0;
 	u8 flag_im = 0, flag_re = 0;
+	u8 keres = 0;
 	float sqr = 0.0, tmp = 0.0;
 	float qwe[2] = {};
 	u16 mennyi = 0;
@@ -59,7 +62,19 @@ int main(int argc, uch *argv[])
 	for(u8 i = 1; i < 11; i++){
 		l0 = beszur_elore(l0,i);
 	}
-	printf("Feltoltes kesz\n");
+	printf("Feltoltes kesz(elejere).\n");
+	kiir(l0);
+
+	for(u8 i = 1; i < 11; i++){
+		l0 = beszur_hatra(l0,i);
+	}
+	printf("Feltoltes kesz(hatra).\n");
+
+//	keres_sima(l0,2);
+//	keres_sima(l0,34);
+	printf("Irja be a keresni kivant szamot!\n");
+	scanf("%d", &keres);
+	keres_sima(l0,keres);
 
 	hossz_sima(l0, &mennyi);
 	printf("%d\n", mennyi);
@@ -83,7 +98,7 @@ int main(int argc, uch *argv[])
 	}
 
 	kiir(l0);
-	kiir_komplex(lk);
+//	kiir_komplex(lk);
 /*
 	while(in_Re != 0.0 || in_Im != 0.0){
 		flag_re = scanf("%f", &in_Re);
@@ -106,6 +121,38 @@ int main(int argc, uch *argv[])
 	fclose(f1);
 
 	return 0;
+}
+
+void keres_sima(lista* l0, u8 data_s){
+	lista *p = l0;
+	while(p->next != NULL){
+		if(p->data_8 == data_s){
+			printf("Benne van a listaban a keresett elem: %d\n",data_s);
+		//	p->next = NULL;
+			return;
+		}else{
+			p = p->next;
+		}
+	}
+	printf("Nincs benne listaban a keresett elem(%d).\n",data_s);
+}
+
+lista *beszur_hatra(lista* l, u8 data){
+	lista *uj = (lista*)malloc(sizeof(lista));
+
+	uj->data_8 = data;
+	uj->next = NULL;
+
+	if(l == NULL){
+		return uj;
+	}else{
+		lista *p = l;
+		while(p->next != NULL)
+			p= p->next;
+
+		p->next = uj;
+		return l;
+	}
 }
 
 void hossz_sima(lista *l, u16 *lenght){
